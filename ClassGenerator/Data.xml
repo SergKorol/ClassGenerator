@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Models>
+    <Employee>
+        <Id>7a8f7b59-1e8a-4f5b-bb67-2f2d99a1c054</Id>
+        <Name>John Doe</Name>
+        <Hired>2024-09-17T00:00:00</Hired>
+    </Employee>
+    <User>
+        <Id>f23aaf55-e0da-4225-ad84-c1bccf4acfe6</Id>
+        <Name>Jane Doe</Name>
+        <Registered>2024-09-17T00:00:00</Registered>
+    </User>
+</Models>

@@ -1,0 +1,82 @@
+<#@ template debug="false" hostspecific="true" #>
+<#@ output extension="cs" #>
+<#@ include file="Models.ttinclude" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ assembly name="System.Xml"#>
+<#@ import namespace="System.Xml" #>
+
+<#
+    XmlDocument doc = new XmlDocument();
+    doc.Load("../Data.xml");
+    XmlNodeList data = doc.DocumentElement?.ChildNodes;
+    if (data != null)
+    {
+        var nodes = data.Cast<XmlNode>().ToList();
+
+        foreach (var node in nodes)
+        {
+            var modelSource = "Models.";
+            var typeName = node.Name;
+            
+            var id = node["Id"]?.InnerText;
+            var name = node["Name"]?.InnerText;
+            var hired = node["Hired"];
+            var registered = node["Registered"];
+
+#>
+
+
+namespace ClassGenerator.Templates.<#= typeName #>
+{
+    public class DataRepository<T> where T : class, new()
+    {
+        public <#= modelSource #><#= typeName #> Get()
+        {
+            return new <#= modelSource #><#= typeName #>()
+            {
+                Id = Guid.Parse("<#= id #>"),
+                Name = "<#= name #>",
+<#
+            if (hired != null)
+            {
+#>
+                Hired = DateTime.Parse("<#= hired.InnerText #>"),
+<#
+            }
+            if (registered != null)
+            {
+#>
+                Registered = DateTime.Parse("<#= registered.InnerText #>")
+<#
+            }
+#>
+            };
+        }
+    }
+
+    public class DataService<T> where T : class, new()
+    {
+        private readonly DataRepository<<#= modelSource #><#= typeName #>> _repository;
+
+        public DataService(DataRepository<<#= modelSource #><#= typeName #>> repository)
+        {
+            _repository = repository;
+        }
+
+        public <#= modelSource #><#= typeName #> Get()
+        {
+            return _repository.Get();
+        }
+    }
+}
+
+<#
+        }
+    }
+#>
+
+
+
+
